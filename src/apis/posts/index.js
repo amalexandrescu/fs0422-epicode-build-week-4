@@ -245,4 +245,24 @@ postsRouter.post("/:postId/like", async (req, res, next) => {
   }
 });
 
+postsRouter.delete("/:postId/like", async (req, res, next) => {
+  try {
+    const { userId } = req.body;
+    const updatedPost = await posts
+      .findByIdAndUpdate(
+        req.params.postId,
+        { $pull: { likes: userId } },
+        { new: true }
+      )
+      .populate({ path: "likes", select: "name surname image" });
+    if (updatedPost) {
+      res.send(updatedPost);
+    } else {
+      next(createHttpError(404, `Post with id ${req.params.postId} not found`));
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default postsRouter;
