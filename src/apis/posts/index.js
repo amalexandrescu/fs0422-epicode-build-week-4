@@ -165,4 +165,17 @@ postsRouter.delete("/:postId/comment/:commentId", async (req, res, next) => {
   }
 });
 
+postsRouter.put("/:postId/comment/:commentId", async (req, res, next) => {
+  try {
+    const searchedPost = await posts.findById(req.params.postId);
+
+    if (searchedPost) {
+    } else {
+      next(createHttpError(404, `Post with id ${req.params.postId} not found`));
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default postsRouter;

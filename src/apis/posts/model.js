@@ -5,6 +5,7 @@ const { Schema, model } = mongoose;
 const commentsSchema = new Schema(
   {
     comment: { type: String },
+    userId: { type: String, required: true },
   },
   { timestamps: true }
 );
