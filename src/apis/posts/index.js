@@ -5,6 +5,7 @@ import createHttpError from "http-errors";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
+import UsersModel from "../users/model.js";
 
 const postsRouter = express.Router();
 
@@ -115,6 +116,7 @@ postsRouter.post(
 // *************************** COMMENTS ***************************
 
 postsRouter.post("/:postId/comment", async (req, res, next) => {
+  //in req.body we pot the comment and the user id
   try {
     const searchedPost = await posts.findById(req.params.postId);
 
@@ -137,7 +139,9 @@ postsRouter.post("/:postId/comment", async (req, res, next) => {
 
 postsRouter.get("/:postId/comment", async (req, res, next) => {
   try {
-    const currentPost = await posts.findById(req.params.postId);
+    const currentPost = await posts
+      .findById(req.params.postId)
+      .populate({ path: "comments.userId", select: "name surname image" });
     if (currentPost) {
       res.send(currentPost.comments);
     } else {
@@ -170,8 +174,71 @@ postsRouter.put("/:postId/comment/:commentId", async (req, res, next) => {
     const searchedPost = await posts.findById(req.params.postId);
 
     if (searchedPost) {
+      const index = searchedPost.comments.findIndex(
+        (comment) => comment._id.toString() === req.params.commentId
+      );
+
+      if (index !== -1) {
+        searchedPost.comments[index] = {
+          ...searchedPost.comments[index].toObject(),
+          ...req.body,
+        };
+        await searchedPost.save();
+        res.send(searchedPost);
+      } else {
+        next(
+          createHttpError(
+            404,
+            `Comment with id ${req.params.commentId} not found`
+          )
+        );
+      }
     } else {
       next(createHttpError(404, `Post with id ${req.params.postId} not found`));
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// *************************** LIKES ***************************
+
+postsRouter.post("/:postId/like", async (req, res, next) => {
+  try {
+    //in the req.body we'll get the userId;
+
+    const { userId } = req.body;
+
+    const post = await posts.findById(req.params.postId);
+
+    if (!post) {
+      return next(
+        createHttpError(404, `Post with id ${req.params.postId} not found`)
+      );
+    }
+
+    const user = await UsersModel.findById(userId);
+
+    if (!user) {
+      return next(createHttpError(404, `User with id ${userId} not found`));
+    }
+
+    const checkLike = post.likes.findIndex(
+      (like) => like.toString() === userId.toString()
+    );
+
+    if (checkLike === -1) {
+      const modifiedPost = await posts
+        .findOneAndUpdate(
+          post,
+          { $push: { likes: userId } },
+          { new: true, runValidators: true }
+        )
+        .populate({ path: "likes", select: "name surname image" });
+
+      res.send(modifiedPost);
+    } else {
+      next(createHttpError(400, `User already liked that post`));
     }
   } catch (error) {
     next(error);
