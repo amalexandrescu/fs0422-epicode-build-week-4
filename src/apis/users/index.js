@@ -116,6 +116,7 @@ usersRouter.put("/:userId", async (req, res, next) => {
           req.body,
           { new: true, runValidators: true }
         );
+        console.log("updated user", updatedUser);
         if (updatedUser) {
           res.send(updatedUser);
         } else {
@@ -130,6 +131,7 @@ usersRouter.put("/:userId", async (req, res, next) => {
         req.body,
         { new: true, runValidators: true }
       );
+      console.log(updatedUser);
       if (updatedUser) {
         res.send(updatedUser);
       } else {
