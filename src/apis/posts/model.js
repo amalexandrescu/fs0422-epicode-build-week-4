@@ -5,7 +5,7 @@ const { Schema, model } = mongoose;
 const commentsSchema = new Schema(
   {
     comment: { type: String },
-    userId: { type: String, required: true },
+    userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
   },
   { timestamps: true }
 );
@@ -17,6 +17,12 @@ const postSchema = new Schema(
     image: { type: String },
     user: { type: Schema.Types.ObjectId, ref: "User" },
     comments: [commentsSchema],
+    likes: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: true,
