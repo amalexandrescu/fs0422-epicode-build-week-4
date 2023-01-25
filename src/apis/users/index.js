@@ -116,7 +116,6 @@ usersRouter.put("/:userId", async (req, res, next) => {
           req.body,
           { new: true, runValidators: true }
         );
-        console.log("updated user", updatedUser);
         if (updatedUser) {
           res.send(updatedUser);
         } else {
@@ -131,7 +130,6 @@ usersRouter.put("/:userId", async (req, res, next) => {
         req.body,
         { new: true, runValidators: true }
       );
-      console.log(updatedUser);
       if (updatedUser) {
         res.send(updatedUser);
       } else {
@@ -220,7 +218,10 @@ usersRouter.post("/:userId/experiences", async (req, res, next) => {
 });
 usersRouter.get("/:userId/experiences", async (req, res, next) => {
   try {
-    const Experiences = await experienceModel.find();
+    const theUser = await UsersModel.findById(req.params.userId).populate({
+      path: "experience",
+    });
+    const Experiences = theUser.experience;
     res.status(200).send(Experiences);
   } catch (error) {
     next(error);
