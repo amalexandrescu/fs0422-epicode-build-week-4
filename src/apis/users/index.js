@@ -204,7 +204,11 @@ usersRouter.post("/:userId/experiences", async (req, res, next) => {
 
     console.log(newExperience._id);
 
-    const relatedUser = await UsersModel.findByIdAndUpdate(req.params.userId, { $push: { experience: expID.toString() } }, { new: true, runValidators: true });
+    const relatedUser = await UsersModel.findByIdAndUpdate(
+      req.params.userId,
+      { $push: { experience: expID.toString() } },
+      { new: true, runValidators: true }
+    );
 
     await relatedUser.save();
     res.status(200).send(newExperience);
@@ -254,8 +258,18 @@ usersRouter.delete("/:userId/experiences/:expId", async (req, res, next) => {
     const remainigExp = expArray.filter((exp) => exp.toString() !== expId);
     theUser.experience = remainigExp;
     await theUser.save();
-    res.status(200).send({ status: `Experience with ID ${expId} was successfully deleted` });
+    res
+      .status(200)
+      .send({ status: `Experience with ID ${expId} was successfully deleted` });
+  } catch (error) {
+    next(error);
+  }
+});
 
+usersRouter.get("/me/:myId", async (req, res, next) => {
+  try {
+    const me = await UsersModel.findById(req.params.myId);
+    res.send(me);
   } catch (error) {
     next(error);
   }
