@@ -24,11 +24,11 @@ const pictureUploaderToCloudinary = multer({
 pictureRouter.post("/:userName/experiences/:expId/picture", pictureUploaderToCloudinary, async (req, res, next) => {
   try {
     const theUser = await UsersModel.findOne({ username: req.params.userName });
-    console.log("theUser:", req.params.userName);
-    console.log("theUser:", theUser);
+    //console.log("theUser:", req.params.userName);
+    //console.log("theUser:", theUser);
     const theExperience = await experienceModel.findByIdAndUpdate(req.params.expId, { image: req.file.path }, { new: true, runValidators: true });
-    console.log("theExperience:", theExperience);
-    await theUser.save();
+    //console.log("theExperience:", theExperience);
+    //await theUser.save();
     res.status(200).send(theExperience);
   } catch (error) {
     next(error);
@@ -49,7 +49,7 @@ pictureRouter.get("/:userName/experiences/CSV", async (req, res, next) => {
       },
     });
 
-    const transform = new json2csv.Transform({ objectMode: true, fields: ["company", "role", "startDate"] });
+    const transform = new json2csv.Transform({ objectMode: true, fields: ["company", "role", "startDate", "endDate"] });
     const destination = res;
     pipeline(source, transform, destination, (err) => {
       if (err) console.log(err);
