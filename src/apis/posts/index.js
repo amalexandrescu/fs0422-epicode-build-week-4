@@ -45,7 +45,7 @@ postsRouter.get('/', async (request, response, next) => {
 //Get post by ID
 postsRouter.get('/:postID', async (request, response, next) => {
   try {
-    const getPost = await posts.findById(request.params.postID).toObject()
+    const getPost = await posts.findById(request.params.postID)
 
     if (getPost) {
       response.status(200).send(getPost)
