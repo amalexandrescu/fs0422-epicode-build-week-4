@@ -44,7 +44,9 @@ postsRouter.get('/', async (request, response, next) => {
 //Get post by ID
 postsRouter.get('/:postID', async (request, response, next) => {
   try {
-    const getPost = await posts.findById(request.params.postID)
+    const getPost = await posts
+      .findById(request.params.postID)
+      .populate({ path: 'likes', ref: 'User' })
 
     if (getPost) {
       response.status(200).send(getPost)
