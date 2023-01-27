@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { response } from 'express'
 import { model } from 'mongoose'
 import posts from './model.js'
 import createHttpError from 'http-errors'
@@ -202,6 +202,19 @@ postsRouter.put('/:postId/comment/:commentId', async (req, res, next) => {
 })
 
 // *************************** LIKES ***************************
+
+postsRouter.post('/:postId/like'),
+  async (req, res, next) => {
+    try {
+      const posts = await posts.findById(req.params.postId)
+
+      if (posts) {
+        response.status(200).send(posts)
+      }
+    } catch (error) {
+      next(error)
+    }
+  }
 
 postsRouter.post('/:postId/like', async (req, res, next) => {
   try {
