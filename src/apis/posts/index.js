@@ -35,6 +35,7 @@ postsRouter.get('/', async (request, response, next) => {
     const getPosts = await posts
       .find({})
       .populate({ path: 'user', select: 'name surname image' })
+      .populate({ path: 'likes', select: 'name surname image' })
     response.status(200).send(getPosts)
   } catch (err) {
     next(err)
