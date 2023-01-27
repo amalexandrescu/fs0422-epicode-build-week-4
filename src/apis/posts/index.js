@@ -44,7 +44,9 @@ postsRouter.get('/', async (request, response, next) => {
 //Get post by ID
 postsRouter.get('/:postID', async (request, response, next) => {
   try {
-    const getPost = await posts.findById(request.params.postID)
+    const getPost = await posts
+      .findById(request.params.postID)
+      .populate({ path: 'likes', ref: 'User' })
 
     if (getPost) {
       response.status(200).send(getPost)
@@ -202,19 +204,6 @@ postsRouter.put('/:postId/comment/:commentId', async (req, res, next) => {
 })
 
 // *************************** LIKES ***************************
-
-postsRouter.get('/:postId/like'),
-  async (req, res, next) => {
-    try {
-      const posts = await posts.findById(req.params.postId)
-
-      if (posts) {
-        response.status(200).send(posts)
-      }
-    } catch (error) {
-      next(error)
-    }
-  }
 
 postsRouter.post('/:postId/like', async (req, res, next) => {
   try {
