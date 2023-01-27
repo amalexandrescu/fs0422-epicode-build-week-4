@@ -10,7 +10,6 @@ import {
 import postsRouter from './apis/posts/index.js'
 import usersRouter from './apis/users/index.js'
 import pictureRouter from './apis/images/exp-profile.js'
-import friendsRouter from './apis/friends/index.js'
 import createHttpError from 'http-errors'
 
 const server = express()
@@ -41,7 +40,6 @@ server.use(express.json())
 server.use('/users', usersRouter)
 server.use('/profile', pictureRouter)
 server.use('/posts', postsRouter)
-server.use('/friends', friendsRouter)
 
 //ERROR HANDLERS
 

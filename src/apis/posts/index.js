@@ -44,9 +44,7 @@ postsRouter.get('/', async (request, response, next) => {
 //Get post by ID
 postsRouter.get('/:postID', async (request, response, next) => {
   try {
-    const getPost = await posts
-      .findById(request.params.postID)
-      .populate({ path: 'likes', ref: 'User' })
+    const getPost = await posts.findById(request.params.postID)
 
     if (getPost) {
       response.status(200).send(getPost)
@@ -205,17 +203,18 @@ postsRouter.put('/:postId/comment/:commentId', async (req, res, next) => {
 
 // *************************** LIKES ***************************
 
-postsRouter.post('/:postId/like', async (req, res, next) => {
+postsRouter.post('/:postID/like', async (req, res, next) => {
   try {
     //in the req.body we'll get the userId;
 
     const { userId } = req.body
 
-    const post = await posts.findById(req.params.postId)
+    const post = await posts.findById(req.params.postID)
+    console.log(post)
 
     if (!post) {
       return next(
-        createHttpError(404, `Post with id ${req.params.postId} not found`),
+        createHttpError(404, `Post with id ${req.params.postID} not found`),
       )
     }
 
@@ -228,17 +227,18 @@ postsRouter.post('/:postId/like', async (req, res, next) => {
     const checkLike = post.likes.findIndex(
       (like) => like.toString() === userId.toString(),
     )
-
     if (checkLike === -1) {
       const modifiedPost = await posts
-        .findOneAndUpdate(
-          req.params.postId,
+        .findByIdAndUpdate(
+          req.params.postID,
           { $push: { likes: userId } },
           { new: true, runValidators: true },
         )
         .populate({ path: 'likes', select: 'name surname image' })
-
-      res.send(modifiedPost)
+      if (modifiedPost) {
+        console.log(modifiedPost)
+        res.send(modifiedPost)
+      }
     } else {
       next(createHttpError(400, `User already liked that post`))
     }
