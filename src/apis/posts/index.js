@@ -210,7 +210,6 @@ postsRouter.post('/:postID/like', async (req, res, next) => {
     const { userId } = req.body
 
     const post = await posts.findById(req.params.postID)
-    console.log(post)
 
     if (!post) {
       return next(
@@ -237,7 +236,6 @@ postsRouter.post('/:postID/like', async (req, res, next) => {
         )
         .populate({ path: 'likes', select: 'name surname image' })
       if (modifiedPost) {
-        console.log(modifiedPost)
         res.send(modifiedPost)
       }
     } else {
