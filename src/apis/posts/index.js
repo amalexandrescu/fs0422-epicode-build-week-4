@@ -232,7 +232,7 @@ postsRouter.post('/:postId/like', async (req, res, next) => {
     if (checkLike === -1) {
       const modifiedPost = await posts
         .findOneAndUpdate(
-          req.params.postId,
+post,
           { $push: { likes: userId } },
           { new: true, runValidators: true },
         )
