@@ -203,19 +203,6 @@ postsRouter.put('/:postId/comment/:commentId', async (req, res, next) => {
 
 // *************************** LIKES ***************************
 
-postsRouter.get('/:postId/like'),
-  async (req, res, next) => {
-    try {
-      const posts = await posts.findById(req.params.postId)
-
-      if (posts) {
-        response.status(200).send(posts)
-      }
-    } catch (error) {
-      next(error)
-    }
-  }
-
 postsRouter.post('/:postId/like', async (req, res, next) => {
   try {
     //in the req.body we'll get the userId;
