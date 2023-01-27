@@ -203,7 +203,7 @@ postsRouter.put('/:postId/comment/:commentId', async (req, res, next) => {
 
 // *************************** LIKES ***************************
 
-postsRouter.post('/:postId/like'),
+postsRouter.get('/:postId/like'),
   async (req, res, next) => {
     try {
       const posts = await posts.findById(req.params.postId)
