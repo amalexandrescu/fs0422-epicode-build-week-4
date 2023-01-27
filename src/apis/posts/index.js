@@ -231,6 +231,7 @@ postsRouter.post('/:postID/like', async (req, res, next) => {
       const modifiedPost = await posts
         .findByIdAndUpdate(
           req.params.postID,
+
           { $push: { likes: userId } },
           { new: true, runValidators: true },
         )

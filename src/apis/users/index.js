@@ -170,7 +170,7 @@ usersRouter.post(
 
 usersRouter.get("/profile/:userId/CV", async (req, res, next) => {
   try {
-    res.setHeader("Content-Disposition", "attachment; filename=test.pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=CV.pdf");
 
     const user = await UsersModel.findById(req.params.userId).populate({
       path: "experience",

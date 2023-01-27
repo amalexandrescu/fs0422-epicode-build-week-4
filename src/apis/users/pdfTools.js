@@ -56,31 +56,6 @@ export const getPdfReadableStream = async (user, userId) => {
     },
   ];
 
-  // const content = [
-  //   { text: "CV", style: "header", alignment: "center" },
-  //   {
-  //     text: `Name: ${user.name} ${user.surname}`,
-  //     style: "subheader",
-  //   },
-  //   { image: "postImage", width: 80, height: 80 },
-  //   { text: `email: ${user.email}`, style: "subheader" },
-  //   {
-  //     text: `Currently working as: ${user.title} in ${user.area}`,
-  //     style: "subheader",
-  //   },
-  //   { text: `Experience: `, style: "header" },
-  //   {
-  //     // ol: user.experience.map((exp, i) => {
-  //     //   return {
-  //     //     text: exp.role,
-  //     //   };
-  //     // }),
-  //     ol: user.experience.map((exp, i) => ({
-  //       text: exp.role,
-  //     })),
-  //   },
-  // ];
-
   const docDefinition = {
     content: [...content],
     defaultStyle: {
@@ -89,7 +64,6 @@ export const getPdfReadableStream = async (user, userId) => {
       columnGap: 20,
     },
     images: { postImage: await createBase64Image(user.image) },
-    // images: { postImage: user.image.toString() },
     styles: {
       header: {
         fontSize: 15,
@@ -101,9 +75,6 @@ export const getPdfReadableStream = async (user, userId) => {
         bold: false,
       },
     },
-    // defaultStyle: {
-    //   columnGap: 20,
-    // },
   };
 
   const pdfReadableStream = printer.createPdfKitDocument(docDefinition);
