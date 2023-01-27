@@ -37,7 +37,7 @@ pictureRouter.post("/:userName/experiences/:expId/picture", pictureUploaderToClo
 
 pictureRouter.get("/:userName/experiences/CSV", async (req, res, next) => {
   try {
-    res.setHeader("Content-Disposition", "attachment; filename=books.csv");
+    res.setHeader("Content-Disposition", "attachment; filename=experiences.csv");
 
     const theUser = await UsersModel.findOne({ username: req.params.userName }).populate({ path: "experience" });
     const experienceArray = theUser.experience;
